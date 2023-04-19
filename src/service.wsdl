@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- <definitions> must be the root of the WSDL document -->
+<wsdl:definitions targetNamespace="http://tempuri.org/"
+  xmlns:s="http://www.w3.org/2001/XMLSchema"
+  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+  xmlns:tns="http://tempuri.org/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+  <!-- WSDL TYPES: definition of the data types that are used in the web service -->
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <!-- *** For Create Account -->
+      <!-- For the Request Payload Type -->
+      <s:element name="CreateAccountRequest">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="name" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="email" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="password" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <!-- For the Response Payload Type -->
+      <s:element name="CreateAccountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="unbounded" name="result" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+
+      <!-- *** For Get Account -->
+      <!-- For the Request Payload Type -->
+      <s:element name="GetAccountByEmailRequest">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="email" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <!-- For the Response Payload Type -->
+      <s:element name="GetAccountByEmailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="unbounded" name="name" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="unbounded" name="email" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="unbounded" name="password" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+
+  <!-- MESSAGES: defines the data being exchanged between the service and client -->
+  <!-- *** For Create Account -->
+  <wsdl:message name="CreateAccountSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateAccountRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="CreateAccountSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateAccountResponse"/>
+  </wsdl:message>
+
+  <!-- *** For Get Account -->
+  <wsdl:message name="GetAccountByEmailSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAccountByEmailRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetAccountByEmailSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAccountByEmailResponse"/>
+  </wsdl:message>
+
+  <!-- PORT TYPES: defines the complete communication operation (one way/round trip) -->
+  <wsdl:portType name="UserAccountServiceSoapPort">
+
+    <!-- The operation name must be the same as the one specified in the service object -->
+
+    <wsdl:operation name="CreateUser">
+      <wsdl:input message="tns:CreateAccountSoapIn"/>
+      <wsdl:output message="tns:CreateAccountSoapOut"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getUserByEmail">
+      <wsdl:input message="tns:GetAccountByEmailSoapIn"/>
+      <wsdl:output message="tns:GetAccountByEmailSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <!-- BINDING: provides details on how a portType operation will actually be transmitted -->
+  <!-- Provides concrete information on what protocol is being used to transfer portType operations -->
+  <!-- **** BINDING: (1) **** -->
+  <wsdl:binding name="UserAccountServiceSoapBinding" type="tns:UserAccountServiceSoapPort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="CreateUser">
+      <soap:operation soapAction="CreateUser" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="getUserByEmail">
+      <soap:operation soapAction="getUserByEmail" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <!-- ********* END ******** -->
+
+  <!-- SERVICE:  -->
+  <wsdl:service name="DemoToTeamService">
+  <!-- **** SERVICE: (1) **** -->
+  <!-- A <port> element defines an individual endpoint by specifying a single address for a binding. -->
+    <wsdl:port name="UserAccountServiceSoapPort" binding="tns:UserAccountServiceSoapBinding">
+      <soap:address location="http://localhost:8080/wsdl"/>
+    </wsdl:port>
+  <!-- ********* END ******** -->
+  </wsdl:service>
+</wsdl:definitions>
